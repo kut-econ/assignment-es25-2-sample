@@ -1,0 +1,64 @@
+---
+title: "進化社会学課題2"
+author: "工科太郎(本名に書き換えること)"
+date: "`r format(Sys.Date(),'%Y年%m月%d日')`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## 課題の内容
+
+誘導された変異の差分方程式
+
+$$
+p_{t+1} = p_t + (1-p_t) \mu
+$$
+について、以下のA-Cに答えなさい。
+
+A) 初期値が$p_0=0, 0.2, 0.4, 0.6, 0.8, 1.0$の6通りの場合について、世代$t=0\sim 100$までの$p_t$の値を数値計算によって求めるコードを書きなさい。ただし$\mu=0.05$とする。(注：計算結果は行列に格納しなさい。得られた$p_t$の数値を画面に出力する必要はありません。)
+
+```{r assignment-2-A}
+# ここにコードを書く
+gn <- 100
+p0 <- seq(0,1,0.2)
+mu <- 0.05
+p <- matrix(nrow=length(p0),ncol=gn+1)
+p[,1] <- p0
+for(t in 1:gn){
+  p[,t+1] <- p[,t] + (1-p[,t])*mu
+}
+```
+
+B) 上記6通りの結果を、横軸$t$、縦軸$p_t$のグラフにプロットせよ（6種類の色もしくは線種を使って分かりやすくすること。ヒント：色は数字でも指定できる）。
+
+```{r assignment-2-B}
+# ここにコードを書く
+
+for(i in 1:length(p0)){
+  plot(0:gn,p[i,],xlim=c(0,gn),ylim=c(0,1),col=i,xlab='Generation',ylab='Frequency')
+  par(new=T)
+}
+```
+
+C) 解析解
+
+$$
+p_t = 1-(1-\mu)^t (1-p_0)
+$$
+
+を用いて同様のグラフを描き、（計算誤差を除いて）全く同じグラフになることを確認せよ。同じにならなければ、計算が間違っている。
+
+```{r assignment-2-C}
+# ここにコードを書く
+p_ana <- function(mu,p0,t){
+  return(1-((1-mu)^t)*(1-p0))
+}
+for(i in 1:length(p0)) {
+  curve(p_ana(0.05,p0[i],x),xlim=c(0,100),ylim=c(0,1),col=i,xlab='Generation',ylab='Frequency')
+  par(new=T)
+}
+```
+
